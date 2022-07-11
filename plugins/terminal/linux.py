@@ -27,9 +27,18 @@ from ansible.plugins.terminal import TerminalBase
 
 
 class TerminalModule(TerminalBase):
-    # This is the propt that I use on my machines
+    # This is the propt that I use on my machines. You should modify this to
+    # match the devices you are using.
     terminal_stdout_re = [
         re.compile(rb"\w+@\w+:[~/\w+]% "),
+    ]
+
+    # This list is the only way that network_cli has to know that something
+    # has gone wrong. Without this list, it will assume that every command
+    # it issues is a success. In this instance, my prompt changes to a ! when
+    # the exit code is non-zero, so I can use that.
+    terminal_stderr_re = [
+        re.compile(rb"\w+@\w+:[~/\w+]! "),
     ]
 
     # My terminal uses a lot of ANSI codes. You almost certainly don't need all
@@ -40,7 +49,7 @@ class TerminalModule(TerminalBase):
         re.compile(rb"\x1b\[(\d+(;\d+)*)?m"),
         # Clear line (CSI K)
         re.compile(rb"\x1b\[K"),
-        # Change default character set
+        # Change default character set (ESC ( <character>)
         re.compile(rb"\x1b\(\w"),
         # Cursor position (CSI <n> <A-G>)
         re.compile(rb"\x1b\[\d+\w"),
