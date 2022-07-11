@@ -1,5 +1,5 @@
 #
-# (c) 2017 Red Hat Inc.
+# (c) 2022 Red Hat Inc.
 #
 # This file is part of Ansible
 #
@@ -50,6 +50,8 @@ from ansible.plugins.cliconf import CliconfBase, enable_mode
 
 
 class Cliconf(CliconfBase):
+    # These two methods will need to be implemented to support cli_config,
+    # which is going to be fairly specific to your device.
     def get_config(self, source='running', flags=None, format=None):
         """Retrieves the specified configuration from the device
 

@@ -1,5 +1,5 @@
 #
-# (c) 2016 Red Hat Inc.
+# (c) 2022 Red Hat Inc.
 #
 # This file is part of Ansible
 #
@@ -27,11 +27,14 @@ from ansible.plugins.terminal import TerminalBase
 
 
 class TerminalModule(TerminalBase):
-    # My terminal ends with a %, so use that here
+    # This is the propt that I use on my machines
     terminal_stdout_re = [
         re.compile(rb"\w+@\w+:[~/\w+]% "),
     ]
 
+    # My terminal uses a lot of ANSI codes. You almost certainly don't need all
+    # (or maybe even any) of these, as the default is fairly comprehensive for
+    # most cases.
     ansi_re = TerminalBase.ansi_re + [
         # Color codes
         re.compile(rb"\x1b\[(\d+(;\d+)*)?m"),
