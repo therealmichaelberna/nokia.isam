@@ -37,17 +37,18 @@ will produce something like the following output
 
 ```
 % ansible-playbook -v linux.yaml
-PLAY [linux] *******************************************************************************************
 
-TASK [Run a command] ***********************************************************************************
+PLAY [linux] *******************************************************************************
+
+TASK [Run a command] ***********************************************************************
 ok: [remote] => changed=false
   stdout: |-
     Linux remote 4.19.0-20-amd64 #1 SMP Debian 4.19.235-1 (2022-03-17) x86_64 GNU/Linux
     %
   stdout_lines: <omitted>
 
-PLAY RECAP *********************************************************************************************
-remote                     : ok=1   changed=0  unreachable=0  failed=0  skipped=0   rescued=0  ignored=0
+PLAY RECAP *********************************************************************************
+remote                     : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 This is customized to be used against my personal servers, so you should look
