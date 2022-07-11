@@ -16,13 +16,50 @@ A collection may contain metadata that identifies these versions.
 PEP440 is the schema used to describe the versions of Ansible.
 <!--end requires_ansible-->
 
+For example, the playbook
+
+```
+---
+- hosts: linux
+  connection: network_cli
+  gather_facts: false
+
+  vars:
+    ansible_network_os: linkybook.utils.linux
+
+  tasks:
+    - name: Run a command
+      cli_command:
+        command: "uname -a"
+```
+
+will produce something like the following output
+
+```
+% ansible-playbook -v linux.yaml
+PLAY [linux] *******************************************************************************************
+
+TASK [Run a command] ***********************************************************************************
+ok: [remote] => changed=false
+  stdout: |-
+    Linux remote 4.19.0-20-amd64 #1 SMP Debian 4.19.235-1 (2022-03-17) x86_64 GNU/Linux
+    %
+  stdout_lines: <omitted>
+
+PLAY RECAP *********************************************************************************************
+remote                     : ok=1   changed=0  unreachable=0  failed=0  skipped=0   rescued=0  ignored=0
+```
+
+This is customized to be used against my personal servers, so you should look
+through the cliconf and terminal plugins to adapt them to your own uses
+
 ## Included content
 
 <!--start collection content-->
 ### Cliconf plugins
 Name | Description
 --- | ---
-[linkybook.utils.linux](http://example.com/repository/blob/main/docs/linkybook.utils.linux_cliconf.rst)|Example bare minimum cliconf plugin
+[linkybook.utils.linux](https://github.com/Qalthos/linkybook.utils/blob/main/docs/linkybook.utils.linux_cliconf.rst)|Example bare minimum cliconf plugin
 
 <!--end collection content-->
 
