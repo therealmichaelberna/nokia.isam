@@ -32,6 +32,8 @@ description:
 version_added: 0.0.0
 """
 
+import json
+
 from ansible.plugins.cliconf import CliconfBase
 
 
@@ -157,7 +159,8 @@ class Cliconf(CliconfBase):
             }
         :return: capability as json string
         """
-        return super(Cliconf, self).get_capabilities()
+        result = super(Cliconf, self).get_capabilities()
+        return json.dumps(result)
 
     def get_device_info(self):
         """Returns basic information about the network device.
