@@ -136,3 +136,11 @@ dmypy.json
 
 # ide
 .vscode
+
+# tarballs
+*.tar.*
+*tar.gz
+
+#test
+hosts
+playbook.yml

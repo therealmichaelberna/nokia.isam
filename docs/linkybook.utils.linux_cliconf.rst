@@ -1,4 +1,4 @@
-.. _linkybook.utils.linux_cliconf:
+.. _nokia.isam.isam:
 
 
 *********************
