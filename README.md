@@ -1,8 +1,7 @@
-# Ansible Collection - linkybook.utils
+# Ansible Collection - nokia.isam
 
 This is a skeleton collection containing a cliconf plugin and a terminal plugin
-suitable for modifying for use on new unsupported platforms to get cli_command
-working.
+modified for use on the nokia isam to get cli_command working.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility

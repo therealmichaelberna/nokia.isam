@@ -2,7 +2,7 @@
 
 
 *********************
-linkybook.utils.linux
+nokia.isam.isam
 *********************
 
 **Example bare minimum cliconf plugin**

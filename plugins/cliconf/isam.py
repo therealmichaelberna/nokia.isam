@@ -23,7 +23,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 author: Ansible Networking Team
-cliconf: linux
+cliconf: isam
 short_description: Example bare minimum cliconf plugin
 description:
 - This is a cliconf plugin that implements the bare minimum necessary for a new
@@ -67,7 +67,7 @@ class Cliconf(CliconfBase):
             raise ValueError(
                 "fetching configuration from {source} is not supported" % source,
             )
-        if format not in ("hierachical", "flat", "json"):
+        if format not in ("hierachical", "flat", "xml"):
             raise ValueError(
                 "format {format} is not supported" % format,
             )
@@ -155,7 +155,7 @@ class Cliconf(CliconfBase):
             'network_os_platform': <str>,
         },"""
         device_info = dict()
-        device_info['network_os'] = 'nokia.isam'
+        device_info['network_os'] = 'isam'
         device_info['network_os_platform'] = 'Nokia 7330'
 
         sys_info_xml = self.get("info configure system xml")
@@ -230,28 +230,13 @@ class Cliconf(CliconfBase):
         :return: capability as json string
         """
         result = {
-            'rpc': [],
+            'rpc': self.get_isam_rpc(),
             'network_api': 'cliconf',
-            'device_info': {
-                'network_os': 'ont',
-            },
-            'device_operations': {},
-            'format': [],
+            'device_info': self.get_device_info(),
+            'device_operations': self.get_device_operations(),
+            'format': ["flat", "text"],
             'diff_match': [],
             'diff_replace': [],
-            'output': [],
+            'output': ["flat", "hierarchical","xml"],
         }
-        return result
-
-    def get_device_info(self):
-        """Returns basic information about the network device.
-
-        This method will provide basic information about the device such as OS version and model
-        name. This data is expected to be used to fill the 'device_info' key in get_capabilities()
-        above.
-
-        :return: dictionary of device information
-        """
-        return {
-            "network_os": "FIXME",
-        }
+        return json.dumps(result)
