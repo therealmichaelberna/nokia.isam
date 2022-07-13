@@ -34,7 +34,9 @@ version_added: 0.0.0
 
 import json
 
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import to_list
 from ansible.plugins.cliconf import CliconfBase
+
 
 
 class Cliconf(CliconfBase):
@@ -61,6 +63,21 @@ class Cliconf(CliconfBase):
 
         :return: The device configuration as specified by the source argument.
         """
+        if source not in ("running"):
+            raise ValueError(
+                "fetching configuration from {source} is not supported" % source,
+            )
+        if format not in ("hierachical", "flat", "json"):
+            raise ValueError(
+                "format {format} is not supported" % format,
+            )
+        if not flags:
+            flags = []
+        cmd = "info configure"
+        cmd += " ".join(to_list(flags))
+        return self.send_command(cmd)
+        
+
         raise NotImplementedError
 
     def edit_config(self, candidate=None, commit=True, replace=None, diff=False, comment=None):
@@ -91,6 +108,7 @@ class Cliconf(CliconfBase):
                }
 
         """
+
         raise NotImplementedError
 
     def get(self, command=None, prompt=None, answer=None, sendonly=False, newline=True, output=None, check_all=False):
@@ -118,6 +136,58 @@ class Cliconf(CliconfBase):
             newline=newline,
             check_all=check_all,
         )
+
+    def get_isam_rpc(self):
+        return ['get_config',
+                'edit_config',
+                'get_capabilities',
+                'get',
+            ]
+
+    def get_device_info(self):
+        """
+            'device_info': {
+            'network_os': <str>,
+            'network_os_version': <str>,
+            'network_os_model': <str>,
+            'network_os_hostname': <str>,
+            'network_os_image': <str>,
+            'network_os_platform': <str>,
+        },"""
+        device_info = dict()
+        device_info['network_os'] = 'nokia.isam'
+        device_info['network_os_platform'] = 'Nokia 7330'
+
+        sys_info_xml = self.get("info configure system xml")
+        software_xml = self.get("show software-mngt version etsi detail xml")
+        serial_number_xml = self.get("show equipment slot nt-a detail xml")
+
+        device_info['network_os_version'] = self.get_version(sys_info_xml)
+
+        return super().get_device_info()
+
+    def get_device_operations(self):
+        return {
+            "supports_diff_replace": False,
+            "supports_commit": False,
+            "supports_rollback": False,
+            "supports_defaults": False,
+            "supports_onbox_diff": False,
+            "supports_commit_comment": False,
+            "supports_multiline_delimiter": False,
+            "supports_diff_match": False,
+            "supports_diff_ignore_lines": False,
+            "supports_generate_diff": False,
+            "supports_replace": False,
+        }
+
+    def get_option_values(self):
+        return {
+            "format": ["text"],
+            "diff_match": ["line", "strict", "exact", "none"],
+            "diff_replace": ["line", "block"],
+            "output": [],
+        }
 
     def get_capabilities(self):
         """Returns the basic capabilities of the network device
@@ -159,8 +229,19 @@ class Cliconf(CliconfBase):
             }
         :return: capability as json string
         """
-        result = super(Cliconf, self).get_capabilities()
-        return json.dumps(result)
+        result = {
+            'rpc': [],
+            'network_api': 'cliconf',
+            'device_info': {
+                'network_os': 'ont',
+            },
+            'device_operations': {},
+            'format': [],
+            'diff_match': [],
+            'diff_replace': [],
+            'output': [],
+        }
+        return result
 
     def get_device_info(self):
         """Returns basic information about the network device.

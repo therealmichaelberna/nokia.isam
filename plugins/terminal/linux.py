@@ -24,13 +24,15 @@ __metaclass__ = type
 import re
 
 from ansible.plugins.terminal import TerminalBase
+from ansible.errors import AnsibleConnectionFailure
+
 
 
 class TerminalModule(TerminalBase):
-    # This is the propt that I use on my machines. You should modify this to
+    # This is the prompt that I use on my machines. You should modify this to
     # match the devices you are using.
     terminal_stdout_re = [
-        re.compile(rb"\w+@\w+:[~/\w+]% "),
+        re.compile(rb"\w+>#"),
     ]
 
     # This list is the only way that network_cli has to know that something
@@ -38,7 +40,7 @@ class TerminalModule(TerminalBase):
     # it issues is a success. In this instance, my prompt changes to a ! when
     # the exit code is non-zero, so I can use that.
     terminal_stderr_re = [
-        re.compile(rb"\w+@\w+:[~/\w+]! "),
+        re.compile(rb"invalid token", re.I)
     ]
 
     # My terminal uses a lot of ANSI codes. You almost certainly don't need all
@@ -60,3 +62,9 @@ class TerminalModule(TerminalBase):
         # Xterm change keypad (ESC <=|>>)
         re.compile(rb"\x1b(=|>)"),
     ]
+
+    def on_open_shell(self):
+        try:
+            self._exec_cli_command('environment mode batch')
+        except AnsibleConnectionFailure:
+            raise AnsibleConnectionFailure('unable to set terminal parameters')
