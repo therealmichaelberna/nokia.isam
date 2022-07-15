@@ -32,7 +32,7 @@ class TerminalModule(TerminalBase):
     # This is the prompt that I use on my machines. You should modify this to
     # match the devices you are using.
     terminal_stdout_re = [
-        re.compile(rb"[\w-]+>#"),
+        re.compile(rb"[\w-]+>.*#"),
     ]
 
     # This list is the only way that network_cli has to know that something
@@ -64,7 +64,5 @@ class TerminalModule(TerminalBase):
     ]
 
     def on_open_shell(self):
-        try:
-            self._exec_cli_command('environment mode batch')
-        except AnsibleConnectionFailure:
-            raise AnsibleConnectionFailure('unable to set terminal parameters')
+        self._exec_cli_command('environment inhibit-alarms')
+        self._exec_cli_command('exit')

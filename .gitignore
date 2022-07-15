@@ -140,6 +140,7 @@ dmypy.json
 # tarballs
 *.tar.*
 *tar.gz
+nokia-isam-1.0.0.tar.gz
 
 #test
 hosts
