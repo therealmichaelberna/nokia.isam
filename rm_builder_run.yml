@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: yes
+  roles:
+    - ansible_network.cli_rm_builder.run
+  vars:
+    docstring: /root/resource_module_models_isam/models/isam/interfaces/isam_interfaces.yaml
+    rm_dest: /root/nokia.isam2
+    resource: interfaces
+    collection_org: isam
+    collection_name: isam
+    ansible_connection: local
