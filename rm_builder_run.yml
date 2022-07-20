@@ -7,6 +7,6 @@
     #docstring: /home/jank/resource_module_models_isam/models/isam/vlans/isam_vlans.yaml
     rm_dest: .
     resource: vlans
-    collection_org: nokia
+    collection_org: isam
     collection_name: isam
     ansible_connection: local
