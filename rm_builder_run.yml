@@ -4,9 +4,9 @@
   roles:
     - ansible_network.cli_rm_builder.run
   vars:
-    docstring: ./rm_models/isam_bridge_vlan.yaml
-    rm_dest: .
-    resource: bridge_vlans
+    docstring: ./rm_models/isam_bridge.yaml
+    rm_dest: ./tmp/
+    resource: bridges
     collection_org: isam
     collection_name: isam
     ansible_connection: local
