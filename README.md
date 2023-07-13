@@ -76,4 +76,13 @@ ansible_command_timeout : 150
          ansible.builtin.debug:
            msg:
            - "command {{command_1}}"
+
+      - name: multiline config
+        ansible.netcommon.cli_config:
+          config: |
+            configure bridge port 1/1/1/1/1/1/2 vlan-id 1
+            configure bridge port 1/1/1/1/1/1/2 pvid 1
+          diff_match: none
+          diff_replace: block #block does all lines
+        delegate_to: "{{test_olt}}"
    ```
