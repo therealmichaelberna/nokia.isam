@@ -46,7 +46,7 @@ Some modules take a long time to complete due to the slow nature of the device. 
 ```
 ansible_command_timeout : 150
 ```
-150 Seconds should be enough to complete a transmission of the complete configuration. As such it should also be enough for most other commands.
+150 Seconds should be enough to complete a transmission of the complete configuration. As such it should also be enough for most other commands. (Note: cli_config pulls the entire flat config, so it can take 10+ minutes to execute for a highly populated OLT) Consider using cli_command instead if diff isn't needed.
 
    #### Sample Playbook
    ```
@@ -76,6 +76,14 @@ ansible_command_timeout : 150
          ansible.builtin.debug:
            msg:
            - "command {{command_1}}"
+ 
+       - name: Multi-line command
+         ansible.netcommon.cli_command:
+           command: |
+             configure bridge port 1/1/1/1/1/1/1 pvid 1
+             configure bridge port 1/1/1/1/1/1/2 pvid 1
+         delegate_to: "{{test_olt}}"
+         tags: always
 
       - name: multiline config
         ansible.netcommon.cli_config:
@@ -85,4 +93,10 @@ ansible_command_timeout : 150
           diff_match: none
           diff_replace: block #block does all lines
         delegate_to: "{{test_olt}}"
+
+      - name: Push file
+        ansible.netcommon.cli_command:
+          command: "{{ lookup('file', './test-command.txt') }}"
+        delegate_to: "{{test_olt}}"
+        tags: always
    ```
